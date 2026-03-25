@@ -1,4 +1,4 @@
-streamlit>=1.40.0
-requests>=2.31.0
-azure-storage-blob>=12.24.0
-azure-identity>=1.19.0
+streamlit>=1.45.0
+requests>=2.32.0
+azure-storage-blob>=12.25.0
+azure-identity>=1.21.0
