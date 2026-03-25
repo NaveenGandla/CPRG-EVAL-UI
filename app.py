@@ -3,10 +3,10 @@ M42 CPG Report Evaluation UI — Streamlit app for testing the evaluation API.
 """
 
 import json
+import os
 
 import requests
 import streamlit as st
-from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 
 # ---------------------------------------------------------------------------
@@ -56,11 +56,13 @@ with st.sidebar:
         value="http://localhost:8000",
         help="Base URL of the evaluation API (no trailing slash)",
     )
-    blob_account_url = st.text_input(
-        "Blob Account URL",
-        value="",
-        placeholder="https://<account>.blob.core.windows.net",
-        help="Azure Blob Storage account URL (for browsing report JSONs)",
+
+    st.subheader("Azure Storage")
+    blob_connection_string = st.text_input(
+        "Storage Connection String",
+        value=os.environ.get("AZURE_STORAGE_CONNECTION_STRING", ""),
+        type="password",
+        help="Connection string with account key (from Azure Portal > Storage Account > Access keys)",
     )
     blob_json_container = st.text_input(
         "Report JSON Container",
@@ -84,34 +86,36 @@ with st.sidebar:
 # ---------------------------------------------------------------------------
 
 
+def _get_blob_service_client(conn_str: str) -> BlobServiceClient:
+    """Create a BlobServiceClient from a connection string."""
+    return BlobServiceClient.from_connection_string(conn_str)
+
+
 @st.cache_data(ttl=300, show_spinner="Fetching blob list…")
-def list_blob_files(account_url: str, container_name: str) -> list[str]:
-    """List JSON blobs in the given container using DefaultAzureCredential."""
-    credential = DefaultAzureCredential()
-    client = BlobServiceClient(account_url=account_url, credential=credential)
+def list_blob_files(conn_str: str, container_name: str) -> list[str]:
+    """List JSON blobs in the given container."""
+    client = _get_blob_service_client(conn_str)
     container = client.get_container_client(container_name)
     blobs = [b.name for b in container.list_blobs() if b.name.endswith(".json")]
     return sorted(blobs)
 
 
-def fetch_blob_content(account_url: str, container_name: str, blob_name: str) -> dict:
+def fetch_blob_content(conn_str: str, container_name: str, blob_name: str) -> dict:
     """Download and parse a JSON blob."""
-    credential = DefaultAzureCredential()
-    client = BlobServiceClient(account_url=account_url, credential=credential)
+    client = _get_blob_service_client(conn_str)
     blob_client = client.get_blob_client(container_name, blob_name)
     data = blob_client.download_blob().readall()
     return json.loads(data)
 
 
 def upload_document_to_blob(
-    account_url: str, container_name: str, blob_name: str, data: bytes
+    conn_str: str, container_name: str, blob_name: str, data: bytes
 ) -> str:
     """Upload a document to blob storage and return its URL."""
-    credential = DefaultAzureCredential()
-    client = BlobServiceClient(account_url=account_url, credential=credential)
+    client = _get_blob_service_client(conn_str)
     blob_client = client.get_blob_client(container_name, blob_name)
     blob_client.upload_blob(data, overwrite=True)
-    return f"{account_url.rstrip('/')}/{container_name}/{blob_name}"
+    return blob_client.url
 
 
 def call_evaluate(url: str, payload: dict) -> dict:
@@ -282,11 +286,11 @@ with tab_section:
             st.success(f"Loaded: {uploaded_doc_name} ({len(uploaded_doc_bytes) / 1024:.1f} KB)")
 
     else:  # Azure Storage
-        if not blob_account_url:
-            st.info("Enter the Blob Account URL in the sidebar to browse files.")
+        if not blob_connection_string:
+            st.info("Enter the Storage Connection String in the sidebar to browse files.")
         else:
             try:
-                blobs = list_blob_files(blob_account_url, blob_json_container)
+                blobs = list_blob_files(blob_connection_string, blob_json_container)
                 if blobs:
                     selected_blob = st.selectbox(
                         "Select Report JSON", blobs, key="sec_blob"
@@ -321,12 +325,12 @@ with tab_section:
                 if uploaded_doc_bytes is None:
                     st.error("Please upload a PDF or DOCX file first.")
                     st.stop()
-                if not blob_account_url:
-                    st.error("Blob Account URL is required in the sidebar to upload documents.")
+                if not blob_connection_string:
+                    st.error("Storage Connection String is required in the sidebar to upload documents.")
                     st.stop()
                 # Upload document to blob storage, then pass the URL as file_path
                 doc_blob_url = upload_document_to_blob(
-                    blob_account_url, "documents", uploaded_doc_name, uploaded_doc_bytes
+                    blob_connection_string, "documents", uploaded_doc_name, uploaded_doc_bytes
                 )
                 payload["file_path"] = doc_blob_url
             else:
