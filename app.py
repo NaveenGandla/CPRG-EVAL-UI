@@ -103,6 +103,17 @@ def fetch_blob_content(account_url: str, container_name: str, blob_name: str) ->
     return json.loads(data)
 
 
+def upload_document_to_blob(
+    account_url: str, container_name: str, blob_name: str, data: bytes
+) -> str:
+    """Upload a document to blob storage and return its URL."""
+    credential = DefaultAzureCredential()
+    client = BlobServiceClient(account_url=account_url, credential=credential)
+    blob_client = client.get_blob_client(container_name, blob_name)
+    blob_client.upload_blob(data, overwrite=True)
+    return f"{account_url.rstrip('/')}/{container_name}/{blob_name}"
+
+
 def call_evaluate(url: str, payload: dict) -> dict:
     """POST to the evaluation endpoint and return the response."""
     resp = requests.post(url, json=payload, timeout=300)
@@ -232,12 +243,14 @@ with tab_section:
 
     input_mode = st.radio(
         "Input Source",
-        ["Upload JSON File", "Select from Azure Storage"],
+        ["Upload JSON File", "Upload PDF/DOCX File", "Select from Azure Storage"],
         horizontal=True,
         key="sec_input_mode",
     )
 
     report_json_data = None
+    uploaded_doc_bytes = None
+    uploaded_doc_name = None
 
     if input_mode == "Upload JSON File":
         uploaded = st.file_uploader(
@@ -255,6 +268,18 @@ with tab_section:
                 )
             except json.JSONDecodeError:
                 st.error("Invalid JSON file.")
+
+    elif input_mode == "Upload PDF/DOCX File":
+        uploaded_doc = st.file_uploader(
+            "Upload PDF or DOCX Report",
+            type=["pdf", "docx"],
+            key="sec_doc_upload",
+            help="Document will be processed via Azure Document Intelligence to extract sections",
+        )
+        if uploaded_doc:
+            uploaded_doc_bytes = uploaded_doc.getvalue()
+            uploaded_doc_name = uploaded_doc.name
+            st.success(f"Loaded: {uploaded_doc_name} ({len(uploaded_doc_bytes) / 1024:.1f} KB)")
 
     else:  # Azure Storage
         if not blob_account_url:
@@ -292,6 +317,18 @@ with tab_section:
                     st.error("Please upload a JSON file first.")
                     st.stop()
                 payload["report_json"] = report_json_data
+            elif input_mode == "Upload PDF/DOCX File":
+                if uploaded_doc_bytes is None:
+                    st.error("Please upload a PDF or DOCX file first.")
+                    st.stop()
+                if not blob_account_url:
+                    st.error("Blob Account URL is required in the sidebar to upload documents.")
+                    st.stop()
+                # Upload document to blob storage, then pass the URL as file_path
+                doc_blob_url = upload_document_to_blob(
+                    blob_account_url, "documents", uploaded_doc_name, uploaded_doc_bytes
+                )
+                payload["file_path"] = doc_blob_url
             else:
                 if not selected_blob:
                     st.error("Please select a blob file.")
