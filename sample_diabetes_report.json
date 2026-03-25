@@ -1,0 +1,53 @@
+{
+  "report_id": "rpt-20260325-diabetes-001",
+  "sections": [
+    {
+      "id": "sec-1",
+      "title": "Introduction",
+      "content": "Type 2 Diabetes Mellitus (T2DM) is a chronic metabolic disorder characterised by persistent hyperglycaemia resulting from defects in insulin secretion, insulin action, or both. It accounts for approximately 90-95% of all diabetes cases globally. This clinical practice guideline addresses the pharmacological management of newly diagnosed T2DM in adults, with a focus on first-line and second-line therapy selection based on current evidence.",
+      "section_type": "general",
+      "order": 0,
+      "keywords": ["Type 2 Diabetes", "T2DM", "hyperglycaemia", "insulin resistance", "pharmacological management"]
+    },
+    {
+      "id": "sec-2",
+      "title": "First-Line Pharmacological Treatment",
+      "content": "Metformin remains the recommended first-line pharmacological agent for T2DM management. It reduces hepatic glucose production and improves peripheral insulin sensitivity. The UKPDS trial demonstrated that metformin reduced all-cause mortality by 36% in overweight patients with T2DM compared to conventional therapy. Starting dose is 500 mg once daily, titrated to a maximum of 2000 mg/day in divided doses. Metformin is contraindicated in patients with an eGFR below 30 mL/min/1.73m2. Common adverse effects include gastrointestinal symptoms such as nausea, diarrhoea, and abdominal discomfort, which can be mitigated by gradual dose titration or use of extended-release formulations.",
+      "section_type": "guideline",
+      "order": 1,
+      "keywords": ["metformin", "first-line therapy", "UKPDS", "hepatic glucose production", "insulin sensitivity", "eGFR"]
+    },
+    {
+      "id": "sec-3",
+      "title": "Second-Line Therapy and Combination Regimens",
+      "content": "When metformin monotherapy fails to achieve glycaemic targets (HbA1c below 7.0%), addition of a second agent is recommended. SGLT2 inhibitors (empagliflozin, dapagliflozin, canagliflozin) are preferred in patients with established atherosclerotic cardiovascular disease (ASCVD) or heart failure, based on the EMPA-REG OUTCOME, DECLARE-TIMI 58, and CREDENCE trials. GLP-1 receptor agonists (semaglutide, liraglutide, dulaglutide) are recommended for patients with ASCVD or high cardiovascular risk, supported by the SUSTAIN-6, LEADER, and REWIND trials. DPP-4 inhibitors (sitagliptin, saxagliptin, linagliptin) offer a weight-neutral alternative for patients without cardiovascular comorbidities. Sulfonylureas (glimepiride, gliclazide) may be considered when cost is a significant barrier, though they carry a higher risk of hypoglycaemia and weight gain.",
+      "section_type": "guideline",
+      "order": 2,
+      "keywords": ["SGLT2 inhibitors", "GLP-1 receptor agonists", "DPP-4 inhibitors", "sulfonylureas", "HbA1c", "cardiovascular", "EMPA-REG", "SUSTAIN-6"]
+    },
+    {
+      "id": "sec-4",
+      "title": "Glycaemic Targets and Monitoring",
+      "content": "The recommended HbA1c target for most adults with T2DM is below 7.0% (53 mmol/mol). A less stringent target of below 8.0% may be appropriate for elderly patients, those with limited life expectancy, or patients with a history of severe hypoglycaemia. HbA1c should be measured every 3 months until stable, then every 6 months. Self-monitoring of blood glucose (SMBG) is recommended for patients on insulin or sulfonylureas. Continuous glucose monitoring (CGM) may be considered for patients on intensive insulin regimens. Fasting plasma glucose targets are 4.4-7.2 mmol/L and post-prandial glucose targets are below 10.0 mmol/L.",
+      "section_type": "guideline",
+      "order": 3,
+      "keywords": ["HbA1c", "glycaemic targets", "self-monitoring", "CGM", "fasting glucose", "post-prandial"]
+    },
+    {
+      "id": "sec-5",
+      "title": "Safety Considerations and Adverse Effects",
+      "content": "All glucose-lowering agents carry specific safety considerations. Metformin: risk of lactic acidosis in renal impairment and vitamin B12 deficiency with long-term use. SGLT2 inhibitors: risk of genital mycotic infections, diabetic ketoacidosis (euglycaemic DKA), and Fournier gangrene (rare). Canagliflozin has been associated with increased fracture risk and lower-limb amputations in the CANVAS trial. GLP-1 receptor agonists: gastrointestinal side effects (nausea, vomiting), potential risk of pancreatitis, and contraindicated in patients with personal or family history of medullary thyroid carcinoma or MEN2. Sulfonylureas: hypoglycaemia and weight gain. Dose adjustments are required for renal and hepatic impairment across all drug classes.",
+      "section_type": "guideline",
+      "order": 4,
+      "keywords": ["adverse effects", "lactic acidosis", "DKA", "hypoglycaemia", "pancreatitis", "renal impairment", "safety"]
+    },
+    {
+      "id": "sec-6",
+      "title": "Abbreviations",
+      "content": "ASCVD: Atherosclerotic Cardiovascular Disease; CGM: Continuous Glucose Monitoring; DKA: Diabetic Ketoacidosis; DPP-4: Dipeptidyl Peptidase-4; eGFR: Estimated Glomerular Filtration Rate; GLP-1: Glucagon-Like Peptide-1; HbA1c: Glycated Haemoglobin; MEN2: Multiple Endocrine Neoplasia Type 2; SGLT2: Sodium-Glucose Co-Transporter 2; SMBG: Self-Monitoring of Blood Glucose; T2DM: Type 2 Diabetes Mellitus; UKPDS: United Kingdom Prospective Diabetes Study.",
+      "section_type": "abbreviations",
+      "order": 5,
+      "keywords": ["abbreviations", "acronyms"]
+    }
+  ]
+}
