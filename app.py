@@ -8,6 +8,9 @@ import os
 import requests
 import streamlit as st
 from azure.storage.blob import BlobServiceClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ---------------------------------------------------------------------------
 # Constants
